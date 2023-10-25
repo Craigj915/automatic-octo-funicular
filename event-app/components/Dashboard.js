@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Add from "./Add";
+import Register from "./Regiester";
 
 const Dashboard = (props) => {
   const [ads, setAds] = useState([]);
@@ -29,21 +30,21 @@ const Dashboard = (props) => {
       <p className="text-2xl text-center"> Raccoon Fight Events </p>
       {ads?.map((ad) => {
         return (
-          <div className="">
+          <div className="space-y-4 space-x-4">
             <h2 className="text-2xl text-blue-600 font-bold">{ad.name}</h2>
-            <p className="text-gray-400 text-sm">£{ad.price}</p>
             <p className="text-gray-400 text-sm">{ad.location}</p>
-            <iframe className="w-1/2 border-2"
+            <iframe className="h-1/2 border-2"
             src={`${ad.maps}`}
             ></iframe>
+            <p className="text-gray-400 text-sm">{ad.description}</p>
             <button
-              className="bg-green-400 text-white font-bold"
+              className="bg-green-400 text-white font-bold rounded-full p-2"
               onClick={() => updateAdvert(ad)}
             >
               Update
             </button>
             <button
-              className="bg-red-400 text-white font-bold"
+              className="bg-red-400 text-white font-bold rounded-full p-2"
               onClick={() => removeAdvert(ad._id)}
             >
               Delete
@@ -59,6 +60,9 @@ const Dashboard = (props) => {
       currentAd={current}
       client={props.client}
       />
+      <div>
+        <Register/>
+      </div>
     </div>
   );
 };

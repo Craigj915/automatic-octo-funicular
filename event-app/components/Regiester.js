@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 
-const Add = (props) => {
+const Register = (props) => {
   const [disabled, setDisabled] = useState(false);
 
   const submitHandler = (e) => {
@@ -11,31 +11,22 @@ const Add = (props) => {
 
     if (
       !e.target.name.value ||
-      !e.target.location.value ||
-      !e.target.maps.value ||
-      !e.target.description.value
+      !e.target.password.value
     ) {
-      alert("Please fill in all fields correctly");
+      alert("Please fill in all fields");
       setDisabled(false);
       return;
     }
 
-    if (props.currentAd) {
-      result = props.client.updateAd(
-        props.currentAd._id,
-        e.target.name.value,
-        e.target.location.value,
-        e.target.maps.value,
-        e.target.description.value,
-      );
-    } else {
-      result = props.client.addAd(
-        e.target.name.value,
-        e.target.location.value,
-        e.target.maps.value,
-        e.target.description.value,
-      );
-    }
+
+    if (!props.newUser) {
+        result = props.client.newUser(
+            e.target.name.value,
+            e.target.password.value,
+            e.target.company.value,
+            e.target.picture.value,
+          );
+      }
 
     result
       .then(() => {
@@ -43,7 +34,7 @@ const Add = (props) => {
         props.refreshList();
       })
       .catch(() => {
-        alert("Spmething went wrong");
+        alert("Sooomething went wrong, REGISTER USER");
         setDisabled(false);
       });
   };
@@ -63,45 +54,45 @@ const Add = (props) => {
         <input
           type="text"
           id="name"
-          defaultValue={props?.currentAd?.name}
+          defaultValue={props?.newUser?.name}
           name="name"
           placeholder="name"
           className="border border-gray-500 p-2 rounded-lg"
           disabled={disabled}
         ></input>
 
-        <label htmlFor="description"> description </label>
+        <label htmlFor="description"> password </label>
 
         <input
           type="text"
-          id="description"
-          defaultValue={props?.currentAd?.name}
-          name="description"
-          placeholder="description"
+          id="password"
+          defaultValue={props?.newUser?.name}
+          name="password"
+          placeholder="password"
           className="border border-gray-500 p-2 rounded-lg"
           disabled={disabled}
         ></input>
 
-        <label htmlFor="location"> Location </label>
+        <label htmlFor="company"> company </label>
 
         <input
           type="text"
-          id="location"
-          defaultValue={props?.currentAd?.name}
-          name="location"
-          placeholder="location"
+          id="company"
+          defaultValue={props?.newUser?.name}
+          name="company"
+          placeholder="company"
           className="border border-gray-500 p-2 rounded-lg"
           disabled={disabled}
         ></input>
 
-        <label htmlFor="maps"> Maps </label>
+        <label htmlFor="picture"> picture </label>
 
         <input
           type="text"
-          id="maps"
-          defaultValue={props?.currentAd?.name}
-          name="maps"
-          placeholder="maps link"
+          id="picture"
+          defaultValue={props?.newUser?.name}
+          name="picture"
+          placeholder="picture link"
           className="border border-gray-500 p-2 rounded-lg"
           disabled={disabled}
         ></input>
@@ -111,4 +102,4 @@ const Add = (props) => {
   );
 };
 
-export default Add;
+export default Register;

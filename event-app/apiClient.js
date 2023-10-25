@@ -33,6 +33,10 @@ export class ApiClient {
     return this.authenticatedCall("post", url, { name, price });
   }
 
+  newUser(username, password, company, picture) {
+    return this.authenticatedCall("post", url, { username, password, company, picture });
+  }
+
   removeAd(id) {
     return this.authenticatedCall("delete", `${url}${id}`);
   }

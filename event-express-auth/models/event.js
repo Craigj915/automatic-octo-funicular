@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 
-const eventSchema = mongoose.Schema({
+const adSchema = mongoose.Schema({
     name: String,
-    price: Number,
     location: String,
     maps: String,
+    description: String,
 });
 
-module.exports.Event = mongoose.model('Event', eventSchema)
+module.exports.Ad = mongoose.model('Ad', adSchema)

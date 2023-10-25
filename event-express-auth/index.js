@@ -6,7 +6,7 @@ const helmet = require("helmet");
 const cors = require("cors");
 const createError = require("http-errors");
 const { v4: uuidv4 } = require("uuid")
-const { Event } = require("./models/event");
+const { Ad } = require("./models/event");
 const { User } = require("./models/user")
 require("dotenv").config();
 
@@ -36,6 +36,36 @@ app.use(morgan('dev'));
 app.use(helmet());
 
 
+app.post("/register", async (req, res, next) => {
+  console.log("Creating User");
+
+  try {
+    const newUser = new User({
+      username,
+      password,
+      company,
+      picture,
+      token,
+    });
+
+    const saveNewUser = await newUser.save();
+
+    newUser.token = uuidv4();
+        await newUser.save();
+        res.send({
+            token: newUser.token,
+        });
+
+    res.send({
+      message: "User created successfully",
+    });
+  } catch (err) {
+    return next(createError(500, "Internal Server Error"));
+  }
+  });
+
+
+
 app.post("/auth", async (req, res, next) => {
     console.log("logging in");
     
@@ -62,6 +92,7 @@ app.post("/auth", async (req, res, next) => {
     }
 });
 
+
 app.use(async (req, res, next) => {
     const authHeader = req.headers.authorization;
     const user = await User.findOne({ token: authHeader });
@@ -76,7 +107,7 @@ app.use(async (req, res, next) => {
 //Gets ads if user is authenticated
 app.get("/", async (req, res, next) => {
   try {
-    const data = await Event.find();
+    const data = await Ad.find();
     res.send(data);
   } catch (err) {
     return next(createError(500, "Internal Server Error"));
@@ -86,20 +117,22 @@ app.get("/", async (req, res, next) => {
 
 app.post("/", async (req, res, next) => {
   try {
-    const { name, price, location, maps } = req.body;
-    if (!name || !price || !location || !maps) {
+    const { name, description, location, maps } = req.body;
+    if (!name || !description || !location || !maps) {
       return next(createError(400, "Bad Request"));
     }
 
-    const newEvent = new Event({
+    const newAd = new Ad({
       name,
-      price,
+      description,
+      location,
+      maps,
     });
 
-    const saveEvent = await newEvent.save();
+    const saveAd = await newAd.save();
 
     res.send({
-      message: "Event created successfully",
+      message: "Event Ad created successfully",
     });
   } catch (err) {
     return next(createError(500, "Internal Server Error"));
@@ -114,7 +147,7 @@ app.delete("/:id", async (req, res, next) => {
       return next(createError(400, "Bad Request"));
     }
 
-    const deleteEvent = await Event.findByIdAndDelete(id);
+    const deleteAd = await Ad.findByIdAndDelete(id);
 
     res.send({
       message: "Event deleted",
@@ -128,7 +161,7 @@ app.delete("/:id", async (req, res, next) => {
 app.put("/:id", async (req, res, next) => {
     try {
         const { id } = req.params;
-        await Event.findByIdAndUpdate(id, req.body);
+        await Ad.findByIdAndUpdate(id, req.body);
         res.send({
             message: "Event updated successfully",
         });
